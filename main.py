@@ -34,7 +34,6 @@ query_parameters = {
 @app.get("/")
 def read_root():
     try:
-        query_parameters = {}
         r = requests.get(monta_url, params=query_parameters, headers=api_headers)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
