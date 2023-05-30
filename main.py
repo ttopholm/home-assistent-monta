@@ -2,11 +2,25 @@ from fastapi import FastAPI
 import requests
 from os import environ
 import uuid
+from urllib.parse import urlencode
+
 
 app = FastAPI()
 
 monta_url = "https://api.monta.app/api/v1/charge_points/map"
 monta_charge_point_url = "https://api.monta.app/api/v1/charge_points"
+
+geoapify_url = "https://maps.geoapify.com/v1/staticmaps"
+map_style = environ.get('map-style', 'osm-carto')
+map_width = environ.get('map-width', 500)
+map_height = environ.get('map-height', 500)
+geoapify_api_key = environ.get('map-api-key')
+map_zoom = environ.get('map-zoom', 15)
+map_icon = environ.get('map-icon', 'type:material;color:green;size:small;icon:power')
+
+
+
+
 
 api_headers = {
     "Authorization": environ.get("monta-auth-token"),
@@ -17,7 +31,7 @@ api_headers = {
     "Accept-Language": environ.get('language', 'da')
 }
 
-query_parameters = {
+monta_query_parameters = {
     "top": environ.get("bbox-top"),
     "bottom": environ.get("bbox-bottom"),
     "left": environ.get("bbox-left"),
@@ -34,7 +48,7 @@ query_parameters = {
 @app.get("/")
 def read_root():
     try:
-        r = requests.get(monta_url, params=query_parameters, headers=api_headers)
+        r = requests.get(monta_url, params=monta_query_parameters, headers=api_headers)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
@@ -53,11 +67,11 @@ def read_root():
                     "available": cp.get('available')
                 })
             case "charge_point_group":
-                charge_query_parameters = {
+                monta_charge_query_parameters = {
                     "charge_point_group_id": cp.get('id')
                 }
                 try:
-                    r = requests.get(monta_charge_point_url, params=charge_query_parameters, headers=api_headers)
+                    r = requests.get(monta_charge_point_url, params=monta_charge_query_parameters, headers=api_headers)
                     r.raise_for_status()
                 except requests.exceptions.HTTPError as err:
                     raise SystemExit(err)
@@ -72,4 +86,19 @@ def read_root():
                     })
 
     sorted_list = sorted(results, key=lambda x: x.get('price'))
-    return sorted_list[0]
+    result = sorted_list[0]
+
+    location = ','.join(result.get('location').split(',').reverse())
+
+    geoapify_parameters = {
+        "apiKey": geoapify_api_key,
+        "style":  map_style,
+        "width": map_width,
+        "height": map_height,
+        "center": f'lonlat:{location}',
+        "zoom": map_zoom,
+        "marker": f'lonlat:{location};{map_icon}'
+
+    }
+    result['map_image_url'] = f'{geoapify_url}?{urlencode(geoapify_parameters)}'
+    return results
