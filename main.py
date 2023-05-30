@@ -87,7 +87,7 @@ def read_root():
 
     sorted_list = sorted(results, key=lambda x: x.get('price'))
     result = sorted_list[0]
-
+    print(result)
     location = ','.join(result.get('location').split(',').reverse())
 
     geoapify_parameters = {
