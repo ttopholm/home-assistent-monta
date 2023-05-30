@@ -75,7 +75,7 @@ def read_root():
                     "name": cp.get('name'),
                     "address": f'{cp.get("address1")}, {cp.get("address2")}',
                     "price": float(''.join(c for c in cp.get('price_label') if (c.isdigit() or c =='.'))),
-                    "unit_of_measurement": cp.get('price_label').split(' ').pop(),
+                    "unit_of_measurement": cp.get('price_label').split('\u00a0D').pop(),
                     "available": cp.get('available'),
                     "map_image_url": f'{geoapify_url}?{urlencode(geoapify_parameters)}'
                 })
@@ -108,7 +108,7 @@ def read_root():
                         "name": cp.get('name'),
                         "address": f'{cp.get("address1")}, {cp.get("address2")}',
                         "price": float(''.join(c for c in cp.get('pricings').get('public_label') if (c.isdigit() or c =='.'))),
-                        "unit_of_measurement": cp.get('pricings').get('public_label').split(' ').pop(),
+                        "unit_of_measurement": cp.get('pricings').get('public_label').split('\u00a0').pop(),
                         "available": cp.get('available'),
                         "map_image_url": f'{geoapify_url}?{urlencode(geoapify_parameters)}'
                     })
