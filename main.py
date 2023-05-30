@@ -53,11 +53,11 @@ def read_root():
                     "available": cp.get('available')
                 })
             case "charge_point_group":
-                query_parameters = {
+                charge_query_parameters = {
                     "charge_point_group_id": cp.get('id')
                 }
                 try:
-                    r = requests.get(monta_charge_point_url, params=query_parameters, headers=api_headers)
+                    r = requests.get(monta_charge_point_url, params=charge_query_parameters, headers=api_headers)
                     r.raise_for_status()
                 except requests.exceptions.HTTPError as err:
                     raise SystemExit(err)
