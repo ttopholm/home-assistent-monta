@@ -18,16 +18,16 @@ api_headers = {
 }
 
 query_parameters = {
-    "top": environ.get('bbox-top"),
+    "top": environ.get("bbox-top"),
     "bottom": environ.get("bbox-bottom"),
     "left": environ.get("bbox-left"),
     "right": environ.get("bbox-right"),
     "zoom": environ.get("zoom", 15),   
     "center_lat": environ.get("center-lat"),
     "center_lng": environ.get("center-lng"),
-    "busy_all": environ.get('monta-busy', 0)
-    "passive": environ.get('monta-passive', 0),
-    "min_kw": environ.get('monta-min-kw', 0)
+    "busy_all": environ.get("monta-busy", 0)
+    "passive": environ.get("monta-passive", 0),
+    "min_kw": environ.get("monta-min-kw", 0)
 }
 
 
