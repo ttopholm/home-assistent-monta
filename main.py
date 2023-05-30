@@ -10,7 +10,7 @@ app = FastAPI()
 monta_url = "https://api.monta.app/api/v1/charge_points/map"
 monta_charge_point_url = "https://api.monta.app/api/v1/charge_points"
 
-geoapify_url = "https://maps.geoapify.com/v1/staticmaps"
+geoapify_url = "https://maps.geoapify.com/v1/staticmap"
 map_style = environ.get('map-style', 'osm-carto')
 map_width = environ.get('map-width', 500)
 map_height = environ.get('map-height', 500)
