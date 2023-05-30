@@ -58,13 +58,24 @@ def read_root():
     for cp in result_json.get('list'):
         match cp.get('document'):
             case "charge_point":
+                location = ','.join(cp.get('location').split(',').reverse())
+                geoapify_parameters = {
+                    "apiKey": geoapify_api_key,
+                    "style":  map_style,
+                    "width": map_width,
+                    "height": map_height,
+                    "center": f'lonlat:{location}',
+                    "zoom": map_zoom,
+                    "marker": f'lonlat:{location};{map_icon}'
 
+                }
                 results.append({
                     "name": cp.get('name'),
                     "address": f'{cp.get("address1")}, {cp.get("address2")}',
                     "price": float(''.join(c for c in cp.get('price_label') if (c.isdigit() or c =='.'))),
                     "price_label": cp.get('price_label'),
-                    "available": cp.get('available')
+                    "available": cp.get('available'),
+                    "map_image_url": f'{geoapify_url}?{urlencode(geoapify_parameters)}'
                 })
             case "charge_point_group":
                 monta_charge_query_parameters = {
@@ -77,28 +88,27 @@ def read_root():
                     raise SystemExit(err)
                 charge_points = r.json()
                 for cp in charge_points.get('data'):
+                    location = ','.join(cp.get('location').split(',').reverse())
+                    geoapify_parameters = {
+                        "apiKey": geoapify_api_key,
+                        "style":  map_style,
+                        "width": map_width,
+                        "height": map_height,
+                        "center": f'lonlat:{location}',
+                        "zoom": map_zoom,
+                        "marker": f'lonlat:{location};{map_icon}'
+
+                    }
+
                     results.append({
                         "name": cp.get('name'),
                         "address": f'{cp.get("address1")}, {cp.get("address2")}',
                         "price": float(''.join(c for c in cp.get('pricings').get('public_label') if (c.isdigit() or c =='.'))),
                         "price_label": cp.get('pricings').get('public_label'),
-                        "available": cp.get('available')
+                        "available": cp.get('available'),
+                        "map_image_url": f'{geoapify_url}?{urlencode(geoapify_parameters)}'
                     })
 
     sorted_list = sorted(results, key=lambda x: x.get('price'))
-    result = sorted_list[0]
-    print(result)
-    location = ','.join(result.get('location').split(',').reverse())
-
-    geoapify_parameters = {
-        "apiKey": geoapify_api_key,
-        "style":  map_style,
-        "width": map_width,
-        "height": map_height,
-        "center": f'lonlat:{location}',
-        "zoom": map_zoom,
-        "marker": f'lonlat:{location};{map_icon}'
-
-    }
-    result['map_image_url'] = f'{geoapify_url}?{urlencode(geoapify_parameters)}'
-    return result
+    return sorted_list[0]
+  
