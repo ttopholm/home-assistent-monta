@@ -71,5 +71,7 @@ def read_root():
                         "available": cp.get('available')
                     })
 
+    print(results)
     sorted_list = sorted(results, key=lambda x: x.get('price'))
+    print(sorted_list)
     return sorted_list[0]
