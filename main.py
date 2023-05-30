@@ -58,7 +58,8 @@ def read_root():
     for cp in result_json.get('list'):
         match cp.get('document'):
             case "charge_point":
-                location = cp.get('location').split(',').reverse()
+                location = cp.get('location').split(',')
+                location.reverse()
                 location = ','.join(location)
                 geoapify_parameters = {
                     "apiKey": geoapify_api_key,
@@ -89,7 +90,8 @@ def read_root():
                     raise SystemExit(err)
                 charge_points = r.json()
                 for cp in charge_points.get('data'):
-                    location = cp.get('location').split(',').reverse()
+                    location = cp.get('location').split(',')
+                    location.reverse()
                     location = ','.join(location)
                     geoapify_parameters = {
                         "apiKey": geoapify_api_key,
