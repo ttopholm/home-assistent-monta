@@ -101,4 +101,4 @@ def read_root():
 
     }
     result['map_image_url'] = f'{geoapify_url}?{urlencode(geoapify_parameters)}'
-    return results
+    return result
